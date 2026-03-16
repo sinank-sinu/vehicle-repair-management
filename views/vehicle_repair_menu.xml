@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="vehicle_repair_menu_root" name="vehicle repair management"/>
+    <menuitem id="vehicle_repair_first_level_menu" name="vehicle Management" parent="vehicle_repair_menu_root"/>
+    <menuitem id="vehicle_repair_menu_action" name="All vehicle Management" parent="vehicle_repair_first_level_menu" action="vehicle_repair_action"/>
+
+   <menuitem id="vehicle_repair_configurations_menu"
+             name="configuration"
+             parent="vehicle_repair_menu_root"/>
+    <menuitem id="vehicle_repair_configurations_tag_menu"
+              name="tags"
+              parent="vehicle_repair_configurations_menu"
+              action="vehicle_repair_tag_action"/>
+</odoo>

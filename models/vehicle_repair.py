@@ -11,7 +11,6 @@ class VehicleRepair(models.Model):
     _rec_name = 'vehicle_type_id'
     _inherit = ['mail.thread']
 
-
     image_1920 = fields.Image(string="vehicle image")
     mobile_no = fields.Char(related='partner_id.phone', readonly=True)
     active = fields.Boolean(default=True)
@@ -27,8 +26,10 @@ class VehicleRepair(models.Model):
         string=' service advisor',
         default=lambda self: self.env.user
     )
-    company_id = fields.Many2one('res.company',string='Company',default=lambda self: self.env.user.company_id,readonly=True)
-    currency_id = fields.Many2one('res.currency',string='Currency',required=True, default=lambda self: self.env.user.company_id.currency_id)
+    company_id = fields.Many2one('res.company',string='Company',
+                                 default=lambda self: self.env.user.company_id,readonly=True)
+    currency_id = fields.Many2one('res.currency',string='Currency',required=True,
+                                  default=lambda self: self.env.user.company_id.currency_id)
     estimated_amount= fields.Monetary(string='Estimated Amount')
     customer_complaint= fields.Text(string='Customer Complaint')
     vehicle_type_id = fields.Many2one(
@@ -58,7 +59,6 @@ class VehicleRepair(models.Model):
         ('un paid', 'Un Paid'),
         ('paid', 'Paid'),
     ], string='Service Type', default='un paid', required=True, tracking=True)
-
     labor_line_ids = fields.One2many('service.labor.line', 'repair_id',
                                      string='Labor Tracking')
     total_labor_cost = fields.Float(

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
-class VehicleCustomer(models.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     service_count = fields.Integer(compute='_compute_service_count')
@@ -13,9 +12,6 @@ class VehicleCustomer(models.Model):
             partner.service_count = self.env['vehicle.repair'].search_count([
                 ('partner_id', '=', partner.id)
             ])
-
-
-
     def action_service_count(self):
         """this function is for actioning the service count"""
         self.ensure_one()

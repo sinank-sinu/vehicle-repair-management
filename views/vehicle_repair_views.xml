@@ -16,7 +16,8 @@
                 <field name="mobile_no"/>
                 <field name="salesperson_id"/>
                 <field name="estimated_amount"/>
-                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="tag_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
                 <field name="state"/>
             </list>
         </field>
@@ -74,7 +75,7 @@
                             <field name="customer_complaint" placeholder="Type issue here..."/>
                         </page>
 
-                        <page string="Labor Cost Tracking" invisible="service_type != 'paid'">
+                        <page string="Labor Cost" invisible="service_type != 'paid'">
                             <field name="labor_line_ids">
                                 <list editable="bottom">
                                     <field name="detail"/>
@@ -88,7 +89,7 @@
                                 <field name="total_labor_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
                             </group>
                         </page>
-                        <page string="Consumed Parts" invisible="service_type != 'paid'">
+                        <page string="Consumed Parts">
                                   <field name="consumed_part_ids">
                                       <list editable="bottom">
                                           <field name="product_id"/>

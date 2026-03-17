@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 from odoo import api, fields, models
+
 
 class ServiceLaborLine(models.Model):
     _name = 'service.labor.line'
@@ -14,7 +12,6 @@ class ServiceLaborLine(models.Model):
     hours_spent = fields.Float(string='Hours Spent')
 
     currency_id = fields.Many2one(related='repair_id.currency_id', store=True, readonly=True)
-
     hourly_cost = fields.Monetary(
         related='employee_id.hourly_cost',
         string='Hourly Rate'
@@ -22,11 +19,11 @@ class ServiceLaborLine(models.Model):
 
     subtotal = fields.Monetary(
         string='Subtotal',
-        compute='compute_subtotal',
+        compute='_compute_subtotal',
         store=True
     )
+
     @api.depends('hours_spent', 'hourly_cost')
-    def compute_subtotal(self):
-        """compute the subtotal of hourly cost"""
+    def _compute_subtotal(self):
         for line in self:
             line.subtotal = line.hours_spent * line.hourly_cost

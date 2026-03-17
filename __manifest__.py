@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
 {
     'name': 'vehicle_repair_management',
     'version': '1.0',
     'category': 'Vehicle Repair Management',
     'summary': 'Vehicle Repair Management Module',
-    'depends': ['base','fleet','mail'],
+    'depends': ['base','fleet','mail','hr','hr_timesheet','stock'],
     'application': True,
     'installable': True,
     'sequence': -3,

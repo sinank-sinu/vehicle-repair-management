@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
+
+class ConsumedPart(models.Model):
+    _name = 'consumed.part'
+    _description = 'Consumed Part'
+
+    repair_id = fields.Many2one('vehicle.repair')
+    product_id = fields.Many2one('product.product',string='parts',domain=[('type', 'in',['product','goods'])])
+    qty=fields.Float(string='Quantity')
+    unit_price = fields.Monetary(string='Price')
+    currency_id = fields.Many2one('res.currency',string='Currency')
+    subtotal = fields.Monetary(string='Subtotal',compute='compute_subtotal' ,store=True)
+    """this function is for computing the sub total"""
+    @api.depends('qty', 'unit_price')
+    def compute_subtotal(self):
+        for line in self:
+            line.subtotal = line.qty * line.unit_price
+
+

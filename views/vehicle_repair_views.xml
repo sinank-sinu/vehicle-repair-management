@@ -7,92 +7,103 @@
         <field name="view_mode">list,form</field>
     </record>
 
-        <record id="vehicle_repair_view" model="ir.ui.view">
-            <field name="name">vehicle_repair</field>
-            <field name="model">vehicle.repair</field>
-            <field name="arch" type="xml">
-                <list string="vehicle_repair_management">
-                    <field name="partner_id"/>
-                    <field name="active"/>
-                    <field name="mobile_no"/>
-                    <field name="salesperson_id"/>
-                    <field name="estimated_amount"/>
-                    <field name="tag_ids"/>
-
-                </list>
-            </field>
-        </record>
-
+    <record id="vehicle_repair_view" model="ir.ui.view">
+        <field name="name">vehicle_repair.list</field>
+        <field name="model">vehicle.repair</field>
+        <field name="arch" type="xml">
+            <list string="vehicle_repair_management">
+                <field name="partner_id"/>
+                <field name="mobile_no"/>
+                <field name="salesperson_id"/>
+                <field name="estimated_amount"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
 
     <record id="vehicle_repair_view_form" model="ir.ui.view">
         <field name="name">vehicle_repair_form</field>
         <field name="model">vehicle.repair</field>
         <field name="arch" type="xml">
-            <form string="vehicle repair management" >
-
-                <sheet>
-                    <header>
+            <form string="vehicle repair management">
+                <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight"
-                            invisible="state in ('in progress','ready_for_delivery','done','cancel')"/>
+                            invisible="state in ('in progress', 'ready for delivery','done','cancel')"/>
                     <button name="action_ready_for_delivery" type="object" string="Ready for Delivery" class="oe_highlight"
                             invisible="state in ('cancel','draft','ready for delivery','done')"/>
-
-                        <button name="action_done" type="object" string="done" class="oe_highlight" invisible="state in ('cancel','draft','in progress','done')"/>
-
+                    <button name="action_done" type="object" string="Done" class="oe_highlight"
+                            invisible="state in ('cancel','draft','in progress','done')"/>
                     <button name="action_cancel" type="object" string="Cancel"
                             invisible="state in ('done', 'cancel')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft, in progress, ready for delivery, done, canceled"/>
-
-                      </header>
-
-                    <div class="title">
-                        <h1><field name="reference" placeholder="Sequence no"/></h1>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in progress,ready for delivery,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="reference" readonly="1"/></h1>
                     </div>
-
-                    <field name="image_1920"  class="oe_avatar" widget="image"/>
-
+                    <field name="image_1920" class="oe_avatar" widget="image"/>
                     <group>
                         <group>
-                            <field name="partner_id"
-                               widget="res_partner_many2one"
-                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
-                               placeholder=" customer..." readonly="state in ('in progress')"/>
-
+                            <field name="partner_id" widget="res_partner_many2one" placeholder="Customer..." readonly="state == 'done'"/>
                             <field name="active"/>
-                            <field name="tag_ids"  widget="many2many_tags" options="{'color_field': 'color'}" readonly="state in ('in progress')"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
                             <field name="company_id"/>
-                            <field name="estimated_amount"/>
-
+                            <field name="estimated_amount" widget="monetary" readonly="state == 'in progress'"/>
+                            <field name="service_type" required="1" readonly="state == 'in progress'"/>
                         </group>
                         <group>
-                            <field name="start_date" readonly="state in ('in progress')"/>
-                            <field name="vehicle_type_id" readonly="state in ('in progress')"/>
-                            <field name="vehicle_model_id" readonly="state in ('in progress')"/>
-                            <field name="vehicle_number" />
-                            <field name="salesperson_id" />
-                            <field name="mobile_no" placeholder=" customer number"/>
-"
+                            <field name="start_date" readonly="state == 'in progress'"/>
+                            <field name="vehicle_type_id" readonly="state == 'in progress'"/>
+                            <field name="vehicle_model_id" readonly="state == 'in progress'"/>
+                            <field name="vehicle_number" readonly="state == 'in progress'"/>
+                            <field name="salesperson_id" readonly="state == 'in progress'"/>
+                            <field name="mobile_no"/>
                         </group>
-
                     </group>
 
                     <notebook>
-                        <page string="Customer Complaint:" >
-                            <field name="customer_complaint" placeholder="Type issue"/>
+                        <page string="Customer Complaint">
+                            <field name="customer_complaint" placeholder="Type issue here..."/>
+                        </page>
+
+                        <page string="Labor Cost Tracking" invisible="service_type != 'paid'">
+                            <field name="labor_line_ids">
+                                <list editable="bottom">
+                                    <field name="detail"/>
+                                    <field name="employee_id"/>
+                                    <field name="hours_spent" />
+                                    <field name="hourly_cost" widget="monetary"/>
+                                    <field name="subtotal" widget="monetary" />
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_labor_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                        </page>
+                        <page string="Consumed Parts">
+                                  <field name="consumed_part_ids">
+                                      <list editable="bottom">
+                                          <field name="product_id"/>
+                                          <field name="qty"/>
+                                          <field name="unit_price" widget="monetary"/>
+                                          <field name="subtotal" widget="monetary"/>
+                                      </list>
+                                  </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_parts_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
                 <chatter/>
-
             </form>
         </field>
     </record>
-<record id="seq_vehicle_repair" model="ir.sequence">
-    <field name="name">Vehicle Repair Sequence</field>
-    <field name="code">vehicle.repair.management</field>
-    <field name="prefix">REPAIR//</field>
-    <field name="padding">5</field>
-</record>
 
+    <record id="seq_vehicle_repair" model="ir.sequence">
+        <field name="name">Vehicle Repair Sequence</field>
+        <field name="code">vehicle.repair.management</field>
+        <field name="prefix">REPAIR/</field>
+        <field name="padding">5</field>
+    </record>
 </odoo>
-

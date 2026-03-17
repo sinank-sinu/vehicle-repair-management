@@ -4,8 +4,8 @@
         <record id="model_category_vtt212" model="fleet.vehicle.model.category">
             <field name="name">VTT21212</field>
         </record>
-        <record id="model_category_city787" model="fleet.vehicle.model.category">
-            <field name="name">new212</field>
+        <record id="model_category_maruthi" model="fleet.vehicle.model.category">
+            <field name="name">maruthi</field>
         </record>
     </data>
 </odoo>

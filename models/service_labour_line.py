@@ -27,5 +27,6 @@ class ServiceLaborLine(models.Model):
     )
     @api.depends('hours_spent', 'hourly_cost')
     def compute_subtotal(self):
+        """compute the subtotal of hourly cost"""
         for line in self:
             line.subtotal = line.hours_spent * line.hourly_cost

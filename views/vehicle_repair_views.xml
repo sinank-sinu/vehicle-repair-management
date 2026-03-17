@@ -17,6 +17,7 @@
                 <field name="salesperson_id"/>
                 <field name="estimated_amount"/>
                 <field name="tag_ids" widget="many2many_tags"/>
+                <field name="state"/>
             </list>
         </field>
     </record>
@@ -27,15 +28,20 @@
         <field name="arch" type="xml">
             <form string="vehicle repair management">
                 <header>
-                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight"
+                    <button name="action_confirm" type="object"
+                            string="Confirm" class="oe_highlight"
                             invisible="state in ('in progress', 'ready for delivery','done','cancel')"/>
-                    <button name="action_ready_for_delivery" type="object" string="Ready for Delivery" class="oe_highlight"
+                    <button name="action_ready_for_delivery" type="object"
+                            string="Ready for Delivery" class="oe_highlight"
                             invisible="state in ('cancel','draft','ready for delivery','done')"/>
-                    <button name="action_done" type="object" string="Done" class="oe_highlight"
+                    <button name="action_done" type="object"
+                            string="Done" class="oe_highlight"
                             invisible="state in ('cancel','draft','in progress','done')"/>
-                    <button name="action_cancel" type="object" string="Cancel"
+                    <button name="action_cancel" type="object"
+                            string="Cancel"
                             invisible="state in ('done', 'cancel')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,in progress,ready for delivery,done"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in progress,ready for delivery,done"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -44,9 +50,11 @@
                     <field name="image_1920" class="oe_avatar" widget="image"/>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" placeholder="Customer..." readonly="state == 'done'"/>
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   placeholder="Customer..." readonly="state == 'done'"/>
                             <field name="active"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
                             <field name="company_id"/>
                             <field name="estimated_amount" widget="monetary" readonly="state == 'in progress'"/>
                             <field name="service_type" required="1" readonly="state == 'in progress'"/>
@@ -80,7 +88,7 @@
                                 <field name="total_labor_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
                             </group>
                         </page>
-                        <page string="Consumed Parts">
+                        <page string="Consumed Parts" invisible="service_type != 'paid'">
                                   <field name="consumed_part_ids">
                                       <list editable="bottom">
                                           <field name="product_id"/>
@@ -94,12 +102,15 @@
                             </group>
                         </page>
                     </notebook>
+                     <group class="oe_subtotal_footer oe_right">
+                                <field name="total_parts_labor_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
+                     </group>
+
                 </sheet>
                 <chatter/>
             </form>
         </field>
     </record>
-
     <record id="seq_vehicle_repair" model="ir.sequence">
         <field name="name">Vehicle Repair Sequence</field>
         <field name="code">vehicle.repair.management</field>

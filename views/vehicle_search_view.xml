@@ -1,0 +1,35 @@
+<odoo>
+
+<record id="vehicle_search_view" model="ir.ui.view">
+    <field name="name">vehicle.search.view</field>
+    <field name="model">vehicle.repair</field>
+    <field name="arch" type="xml">
+        <search string="Search ">
+            <field name="vehicle_type_id" readonly="state == 'in progress'"/>
+            <field name="vehicle_number" readonly="state == 'in progress'"/>
+            <field name="reference" readonly="1"/>
+            <field name="partner_id"/>
+            <field name="salesperson_id"/>
+
+
+            <filter string="state"
+                    name="state"
+                    domain="[('state','in',['in progress','ready for delivery','done'])]"/>
+            <filter string="Archived"
+                    name="inactive"
+                    domain="[('active','=',False)]"/>
+
+    <filter string="Customer" name="group_customer"
+            context="{'group_by': 'partner_id'}"/>
+    <filter string="Responsible User" name="group_user"
+            context="{'group_by': 'salesperson_id'}"/>
+    <filter string="State" name="group_state"
+            context="{'group_by': 'state'}"/>
+    <filter string="Vehicle Type" name="group_vehicle"
+            context="{'group_by': 'vehicle_type_id'}"/>
+
+
+        </search>
+    </field>
+</record>
+</odoo>

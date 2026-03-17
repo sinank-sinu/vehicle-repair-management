@@ -68,12 +68,11 @@ class VehicleRepair(models.Model):
     )
     consumed_part_ids = fields.One2many('consumed.part', 'repair_id', string='Consumed Parts')
     total_parts_cost = fields.Monetary(string='Total Parts Cost', compute='_compute_total_parts_cost', store=True)
-
-    """this function is used to compute the total labor cost"""
-    @api.depends('labor_line_ids.subtotal')
-    def compute_total_labor_cost(self):
-        for record in self:
-            record.total_labor_cost = sum(line.subtotal for line in record.labor_line_ids)
+    total_parts_labor_cost = fields.Monetary(
+        string='Total Combined Cost',
+        compute='_compute_total_parts_labor_cost',
+        store=True
+    )
 
     def action_confirm(self):
         self.write({'state': 'in progress'})
@@ -87,17 +86,23 @@ class VehicleRepair(models.Model):
                 raise UserError("Cannot cancel a completed delivery.")
             record.state = 'cancel'
 
-    """this function is for computing the sequence number"""
     @api.model_create_multi
     def create(self, vals_list):
+        """this function is for computing the sequence number"""
         for vals in vals_list:
             if vals.get('reference', 'New') == 'New':
                 vals['reference'] = self.env['ir.sequence'].next_by_code('vehicle.repair.management')
         return super().create(vals_list)
 
-    """this function is to check the vehicle number is unique"""
+    @api.depends('labor_line_ids.subtotal')
+    def compute_total_labor_cost(self):
+        """this function is used to compute the total labor cost"""
+        for record in self:
+            record.total_labor_cost = sum(line.subtotal for line in record.labor_line_ids)
+
     @api.constrains('vehicle_number')
     def check_vehicle_number_unique(self):
+        """this function is to check the vehicle number is unique"""
         for record in self:
             domain = [
                 ('id', '!=', record.id),
@@ -106,9 +111,19 @@ class VehicleRepair(models.Model):
             if self.search_count(domain) > 0:
                 raise UserError("Vehicle number must be unique.")
 
-    """this function is to check the total labor cost"""
     @api.depends('consumed_part_ids.subtotal')
     def _compute_total_parts_cost(self):
+        """this function is to compute the total parts consumed"""
+
         for record in self:
             record.total_parts_cost = sum(line.subtotal for line in record.consumed_part_ids)
+
+    @api.depends('total_labor_cost', 'total_parts_cost')
+    def _compute_total_parts_labor_cost(self):
+        """this function is to compute the total labor cost and consumed parts"""
+        for record in self:
+            record.total_parts_labor_cost=  record.total_parts_cost + record.total_labor_cost
+
+
+
 

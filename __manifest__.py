@@ -16,6 +16,8 @@
         'security/ir.model.access.csv',
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',
+        'views/vehicle_customer_view.xml',
+        'views/vehicle_search_view.xml',
         'views/vehicle_repair_menu.xml',
     ],
     'demo': ['data/fleet_demo.xml'],

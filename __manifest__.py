@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 
 {
     'name': 'vehicle_repair_management',
     'version': '1.0',
     'category': 'Vehicle Repair Management',
     'summary': 'Vehicle Repair Management Module',
-    'depends': ['base','fleet','mail','hr','hr_timesheet','stock'],
+    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom'],
     'application': True,
     'installable': True,
     'sequence': -3,
 
     'data': [
+        'data/product_demo.xml',
         'security/ir.model.access.csv',
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',

@@ -11,4 +11,5 @@
               name="tags"
               parent="vehicle_repair_configurations_menu"
               action="vehicle_repair_tag_action"/>
+
 </odoo>

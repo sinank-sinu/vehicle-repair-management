@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields,api
+from odoo import models, fields,api, Command
 from datetime import date
 from odoo.exceptions import UserError
 
@@ -73,6 +73,8 @@ class VehicleRepair(models.Model):
         compute='_compute_total_parts_labor_cost',
         store=True
     )
+    status = fields.Selection([('archived','Archived')])
+    estimated_date = fields.Date(string='Estimated Date')
 
     def action_confirm(self):
         self.write({'state': 'in progress'})
@@ -124,6 +126,46 @@ class VehicleRepair(models.Model):
         for record in self:
             record.total_parts_labor_cost=  record.total_parts_cost + record.total_labor_cost
 
+    @api.onchange('vehicle_type_id')
+    def onchange_vehicle_type(self):
+        """this function is to onchange the vehicle type the related filed is erased"""
+        if self.vehicle_type_id or not self.vehicle_type_id:
+            self.vehicle_model_id=False
 
+    def action_create_invoice(self):
+        """this function is to create the invoice"""
+        invoice_lines = []
 
+        for labor in self.labor_line_ids:
+            invoice_lines.append((0, 0, {
+                'name':  labor.employee_id.name,
+                'quantity': labor.hours_spent,
+                'price_unit': labor.hourly_cost,
+
+                }))
+
+        for part in self.consumed_part_ids:
+            invoice_lines.append((0, 0, {
+                'name': part.product_id.name,
+                'quantity': part.qty,
+                'price_unit': part.unit_price,
+            }))
+
+        invoice_vals = {
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_date': fields.Date.context_today(self),
+            'invoice_line_ids': invoice_lines,
+        }
+
+        new_invoice = self.env['account.move'].create(invoice_vals)
+
+        return {
+            'name': 'Draft Invoice',
+            'view_mode': 'form',
+            'res_model': 'account.move',
+            'res_id': new_invoice.id,
+            'type': 'ir.actions.act_window',
+            'context': {'create': False},
+        }
 

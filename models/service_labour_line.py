@@ -6,6 +6,7 @@ class ServiceLaborLine(models.Model):
     _name = 'service.labor.line'
     _description = 'Service Labor Line'
 
+    labor_line_ids = fields.One2many('service.labor.line', 'repair_id', string="Labor Lines")
     repair_id = fields.Many2one('vehicle.repair', string="Repair Reference", ondelete='cascade')
     detail = fields.Char(string='Labor Detail', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)

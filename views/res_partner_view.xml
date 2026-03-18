@@ -10,6 +10,13 @@
                  <field name="service_count" widget="statinfo" string="Service Count"/>
                   </button>
                 </xpath>
+<xpath expr="//field[@name='name']" position="after">
+    <button name="action_create_service"
+            type="object"
+            class="btn btn-primary mb-2"
+            string="Create New Service"/>
+</xpath>
+
             </field>
         </record>
 </odoo>

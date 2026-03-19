@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from pydoc import visiblename
 
 from odoo import models, fields,api, Command
 from datetime import date
@@ -75,8 +76,16 @@ class VehicleRepair(models.Model):
     )
     status = fields.Selection([('archived','Archived')])
     estimated_date = fields.Date(string='Estimated Date')
+    invoice_id = fields.Many2one('account.move', string='Invoice', copy=False)
+    invoice_count= fields.Char(compute='_compute_total_invoice_count', store=True)
+    payment_state = fields.Selection(
+        related='invoice_id.payment_state',
+        string="Payment Status",
+        store=True
+    )
 
     def action_confirm(self):
+        print(self)
         self.write({'state': 'in progress'})
     def action_done(self):
         self.write({'state': 'done'})
@@ -128,44 +137,65 @@ class VehicleRepair(models.Model):
 
     @api.onchange('vehicle_type_id')
     def onchange_vehicle_type(self):
-        """this function is to onchange the vehicle type the related filed is erased"""
+        """this function is to ,when vehicle type erased then related field is erased"""
         if self.vehicle_type_id or not self.vehicle_type_id:
             self.vehicle_model_id=False
 
     def action_create_invoice(self):
-        """this function is to create the invoice"""
-        invoice_lines = []
+        """Creates the invoice and then returns the view of that specific invoice"""
+        self.ensure_one()
 
+        invoice_lines = []
         for labor in self.labor_line_ids:
             invoice_lines.append((0, 0, {
-                'name':  labor.employee_id.name,
+                'name': labor.employee_id.name or 'Labor',
                 'quantity': labor.hours_spent,
                 'price_unit': labor.hourly_cost,
-
-                }))
-
+            }))
         for part in self.consumed_part_ids:
             invoice_lines.append((0, 0, {
                 'name': part.product_id.name,
                 'quantity': part.qty,
                 'price_unit': part.unit_price,
             }))
-
-        invoice_vals = {
+        new_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'invoice_date': fields.Date.context_today(self),
             'invoice_line_ids': invoice_lines,
-        }
-
-        new_invoice = self.env['account.move'].create(invoice_vals)
+        })
+        self.invoice_id = new_invoice.id
+        return self.action_view_invoice()
+    def action_view_invoice(self):
+        """this function is to display the invoice view"""
+        self.ensure_one()
+        if not self.invoice_id:
+            raise UserError("No invoice found for this repair.")
 
         return {
-            'name': 'Draft Invoice',
+            'name': 'Invoice',
             'view_mode': 'form',
             'res_model': 'account.move',
-            'res_id': new_invoice.id,
+            'res_id': self.invoice_id.id,
             'type': 'ir.actions.act_window',
-            'context': {'create': False},
+            'target': 'current',
         }
+    @api.depends('invoice_id','invoice_count')
+    def _compute_total_invoice_count(self):
+        """this function is to compute the total invoice count"""
+        for record in self:
+         if record.invoice_id:
+            record.invoice_count = 1
+         else:
+            record.invoice_count = 0
+    @api.onchange('action_create_invoice','action_view_invoice')
+    def onchange_invoice(self):
+        if not self.invoice_id:
+            self.action_view_invoice= False
+
+
+
+
+
+
 

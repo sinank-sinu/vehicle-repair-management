@@ -7,7 +7,7 @@ class ConsumedPart(models.Model):
     _description = 'Consumed Part'
 
     repair_id = fields.Many2one('vehicle.repair')
-    product_id = fields.Many2one('product.product',string='parts',domain=[('type', 'in',['product','consu'])])
+    product_id = fields.Many2one('product.product',string='parts',domain=[('type', 'in',['product','consu','service'])])
     qty=fields.Float(string='Quantity')
     unit_price = fields.Monetary(string='Price')
     currency_id = fields.Many2one('res.currency',string='Currency')

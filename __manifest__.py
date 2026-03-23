@@ -5,7 +5,7 @@
     'version': '1.0',
     'category': 'Vehicle Repair Management',
     'summary': 'Vehicle Repair Management Module',
-    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom'],
+    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom','contacts'],
     'application': True,
     'installable': True,
     'sequence': -3,

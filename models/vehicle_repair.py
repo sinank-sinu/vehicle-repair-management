@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from pydoc import visiblename
 
-from odoo import models, fields,api, Command
+from odoo import models, fields,api
 from datetime import date
 from odoo.exceptions import UserError
 
@@ -192,10 +192,3 @@ class VehicleRepair(models.Model):
     def onchange_invoice(self):
         if not self.invoice_id:
             self.action_view_invoice= False
-
-
-
-
-
-
-

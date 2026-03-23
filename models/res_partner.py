@@ -36,7 +36,7 @@ class ResPartner(models.Model):
         }
 
     def action_create_service(self):
-        """Opens a new vehicle repair form pre-filled with the current customer"""
+        """This function is for : Opens a new vehicle repair form """
         self.ensure_one()
         return {
             'name': 'New Service Request',

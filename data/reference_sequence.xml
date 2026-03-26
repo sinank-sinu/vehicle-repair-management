@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="seq_vehicle_repair" model="ir.sequence">
+        <field name="name">Vehicle Repair Sequence</field>
+        <field name="code">vehicle.repair.management</field>
+        <field name="prefix">A/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

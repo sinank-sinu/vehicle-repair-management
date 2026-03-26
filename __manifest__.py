@@ -11,6 +11,9 @@
     'sequence': -3,
 
     'data': [
+        'data/ir_cron.xml',
+        'data/reference_sequence.xml',
+        'data/repair_email.xml',
         'data/product_demo.xml',
         'security/ir.model.access.csv',
         'views/vehicle_repair_views.xml',

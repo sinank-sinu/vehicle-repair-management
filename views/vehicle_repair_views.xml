@@ -16,9 +16,10 @@
                 <field name="mobile_no"/>
                 <field name="salesperson_id"/>
                 <field name="estimated_amount"/>
+                 <field name="total_parts_labor_cost"/>
                 <field name="tag_ids" widget="many2many_tags"
                        options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
-                <field name="state"/>
+                <field name="state" decoration-danger="state in ['cancel']" decoration-success="state in ['done']"/>
             </list>
         </field>
     </record>
@@ -79,6 +80,7 @@
                             <field name="company_id"/>
                             <field name="estimated_amount" widget="monetary" readonly="state == 'in progress'"/>
                             <field name="service_type" required="1" readonly="state == 'in progress'"/>
+                            <field name="currency_id"/>
                         </group>
                         <group>
                             <field name="start_date" readonly="state == 'in progress'"/>
@@ -88,6 +90,8 @@
                             <field name="salesperson_id" readonly="state == 'in progress'"/>
                             <field name="mobile_no"/>
                             <field name="estimated_date"/>
+                            <field name="deliver_date" invisible="state in ('draft','in progress','ready for delivery','cancel')"/>
+
                         </group>
                     </group>
 
@@ -133,11 +137,5 @@
                 <chatter/>
             </form>
         </field>
-    </record>
-    <record id="seq_vehicle_repair" model="ir.sequence">
-        <field name="name">Vehicle Repair Sequence</field>
-        <field name="code">vehicle.repair.management</field>
-        <field name="prefix">REPAIR/</field>
-        <field name="padding">5</field>
     </record>
 </odoo>

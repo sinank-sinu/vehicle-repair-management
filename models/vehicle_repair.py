@@ -4,6 +4,7 @@ from pydoc import visiblename
 
 from odoo import models, fields,api
 from datetime import date
+from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
 class VehicleRepair(models.Model):
@@ -75,7 +76,7 @@ class VehicleRepair(models.Model):
         store=True
     )
     status = fields.Selection([('archived','Archived')])
-    estimated_date = fields.Date(string='Estimated Date')
+    estimated_date = fields.Date(string='Estimated Date',default=lambda self: date.today() + relativedelta(days=5))
     invoice_id = fields.Many2one('account.move', string='Invoice', copy=False)
     invoice_count= fields.Char(compute='_compute_total_invoice_count', store=True)
     payment_state = fields.Selection(
@@ -83,14 +84,20 @@ class VehicleRepair(models.Model):
         string="Payment Status",
         store=True
     )
-
+    deliver_date= fields.Date(string='Delivery Date',default=lambda self: date.today())
     def action_confirm(self):
         print(self)
         self.write({'state': 'in progress'})
     def action_done(self):
         self.write({'state': 'done'})
+
     def action_ready_for_delivery(self):
+        """this function is used to determine if the delivery is ready for delivery and send the mail to customer"""
+        template = self.env.ref('vehicle_repair_management.repair_email_template')
+        email_values = {'email_from': self.env.user.email}
+        template.send_mail(self.id, force_send=True, email_values=email_values)
         self.write({'state': 'ready for delivery'})
+
     def action_cancel(self):
         for record in self:
             if record.state == 'done':
@@ -144,6 +151,10 @@ class VehicleRepair(models.Model):
     def action_create_invoice(self):
         """Creates the invoice and then returns the view of that specific invoice"""
         self.ensure_one()
+        existing_invoice = self.env['account.move'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('move_type', '=', 'out_invoice'),
+            ('state', '=', 'draft'), ],limit=1)
 
         invoice_lines = []
         for labor in self.labor_line_ids:
@@ -158,19 +169,25 @@ class VehicleRepair(models.Model):
                 'quantity': part.qty,
                 'price_unit': part.unit_price,
             }))
-        new_invoice = self.env['account.move'].create({
+        if existing_invoice:
+            existing_invoice.write({
+                'invoice_line_ids': invoice_lines,
+            })
+            self.invoice_id = existing_invoice.id
+        else:
+            new_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'invoice_date': fields.Date.context_today(self),
             'invoice_line_ids': invoice_lines,
-        })
-        self.invoice_id = new_invoice.id
+             })
+            self.invoice_id = new_invoice.id
         return self.action_view_invoice()
     def action_view_invoice(self):
         """this function is to display the invoice view"""
         self.ensure_one()
         if not self.invoice_id:
-            raise UserError("No invoice found for this repair.")
+            raise UserError("No products added.")
 
         return {
             'name': 'Invoice',
@@ -192,3 +209,11 @@ class VehicleRepair(models.Model):
     def onchange_invoice(self):
         if not self.invoice_id:
             self.action_view_invoice= False
+
+    def action_archive_days(self):
+        for record in self:
+            if record.state == 'cancelled':
+                record.active=False
+
+
+

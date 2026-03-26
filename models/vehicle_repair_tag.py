@@ -7,3 +7,4 @@ class VehicleRepairTag(models.Model):
 
     name = fields.Char()
     color = fields.Char(string="Color")
+

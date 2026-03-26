@@ -11,13 +11,11 @@ class ServiceLaborLine(models.Model):
     detail = fields.Char(string='Labor Detail', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     hours_spent = fields.Float(string='Hours Spent')
-
     currency_id = fields.Many2one(related='repair_id.currency_id', store=True, readonly=True)
     hourly_cost = fields.Monetary(
         related='employee_id.hourly_cost',
         string='Hourly Rate'
     )
-
     subtotal = fields.Monetary(
         string='Subtotal',
         compute='_compute_subtotal',
@@ -26,5 +24,6 @@ class ServiceLaborLine(models.Model):
 
     @api.depends('hours_spent', 'hourly_cost')
     def _compute_subtotal(self):
+        """Compute subtotal from hourly_cost"""
         for line in self:
             line.subtotal = line.hours_spent * line.hourly_cost

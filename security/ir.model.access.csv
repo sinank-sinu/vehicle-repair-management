@@ -1,6 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vehicle_repair,vehicle.repair,model_vehicle_repair,base.group_user,1,1,1,1
-access_vehicle_repair_tag,vehicle.repair.tag,model_vehicle_repair_tag,base.group_user,1,1,1,1
-access_service_labor_line,service.labor.line,model_service_labor_line,base.group_user,1,1,1,1
-access_consumed_part,consumed.part,model_consumed_part,base.group_user,1,1,1,1
-
+access_vehicle_repair1,vehicle.repair,model_vehicle_repair,vehicle_repair_management.group_technician,1,0,0,0
+access_vehicle_repair_tag1,vehicle.repair.tag,model_vehicle_repair_tag,vehicle_repair_management.group_technician,1,0,0,0
+access_service_labor_line1,service.labor.line,model_service_labor_line,vehicle_repair_management.group_technician,1,0,0,0
+access_consumed_part1,consumed.part,model_consumed_part,vehicle_repair_management.group_technician,1,0,0,0
+access_vehicle_repair,vehicle.repair,model_vehicle_repair,vehicle_repair_management.group_manager,1,1,1,1
+access_vehicle_repair_tag,vehicle.repair.tag,model_vehicle_repair_tag,vehicle_repair_management.group_manager,1,1,1,1
+access_service_labor_line,service.labor.line,model_service_labor_line,vehicle_repair_management.group_manager,1,1,1,1
+access_consumed_part,consumed.part,model_consumed_part,vehicle_repair_management.group_manager,1,1,1,1

@@ -15,6 +15,7 @@
         'data/reference_sequence.xml',
         'data/repair_email.xml',
         'data/product_demo.xml',
+        'security/security_group.xml',
         'security/ir.model.access.csv',
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',

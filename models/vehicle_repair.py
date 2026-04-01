@@ -76,7 +76,8 @@ class VehicleRepair(models.Model):
         store=True
     )
     status = fields.Selection([('archived','Archived')])
-    estimated_date = fields.Date(string='Estimated Date',default=lambda self: date.today() + relativedelta(days=5))
+    duration=fields.Integer(string='Duration',default=0)
+    estimated_date = fields.Date(string='Estimated Date',compute='_compute_estimated_date')
     invoice_id = fields.Many2one('account.move', string='Invoice', copy=False)
     invoice_count= fields.Char(compute='_compute_total_invoice_count', store=True)
     payment_state = fields.Selection(
@@ -86,8 +87,8 @@ class VehicleRepair(models.Model):
     )
     deliver_date= fields.Date(string='Delivery Date',default=lambda self: date.today())
     def action_confirm(self):
-        print(self)
         self.write({'state': 'in progress'})
+
     def action_done(self):
         self.write({'state': 'done'})
 
@@ -183,6 +184,7 @@ class VehicleRepair(models.Model):
              })
             self.invoice_id = new_invoice.id
         return self.action_view_invoice()
+
     def action_view_invoice(self):
         """this function is to display the invoice view"""
         self.ensure_one()
@@ -197,6 +199,7 @@ class VehicleRepair(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'current',
         }
+
     @api.depends('invoice_id','invoice_count')
     def _compute_total_invoice_count(self):
         """this function is to compute the total invoice count"""
@@ -205,15 +208,22 @@ class VehicleRepair(models.Model):
             record.invoice_count = 1
          else:
             record.invoice_count = 0
-    @api.onchange('action_create_invoice','action_view_invoice')
-    def onchange_invoice(self):
-        if not self.invoice_id:
-            self.action_view_invoice= False
 
-    def action_archive_days(self):
+    @api.model
+    def action_cron(self):
+        """this function is to create the cron job"""
+        exact_record=self.search([
+            ('state', '=', 'cancel'), ])
+        for record in exact_record:
+            exact_day=date.today()
+            day_to_archive=record.start_date + relativedelta(days=30)
+            if exact_day == day_to_archive:
+              record.active=False
+
+    @api.depends('start_date')
+    def _compute_estimated_date(self):
+        """this function is to compute the estimated date"""
         for record in self:
-            if record.state == 'cancelled':
-                record.active=False
-
+            record.estimated_date = record.start_date + relativedelta(days=record.duration)
 
 

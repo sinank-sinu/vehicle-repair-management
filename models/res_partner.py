@@ -6,6 +6,9 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     service_count = fields.Integer(compute='_compute_service_count')
+    repair_state = fields.Selection([('non_service_customer','Non Service Customer'),
+                              ('service_customer', 'Service Customer')
+                               ],default='non_service_customer')
 
     def action_archive(self):
         """this function is for actioning the state of customer and the service request to archive """

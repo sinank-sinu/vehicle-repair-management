@@ -3,13 +3,32 @@
     <data noupdate="1">
         <record id="ir_cron_action_archived" model="ir.cron">
             <field name="name">Archive in 30 days</field>
-            <field name="model_id" ref="vehicle.repair"/>
+            <field name="model_id" ref="vehicle_repair_management.model_vehicle_repair"/>
             <field name="state">code</field>
-            <field name="code">model.action_archive_days()
+            <field name="code">model.action_cron()
             </field>
-            <field name="interval_number">30</field>
+            <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
+        </record>
+        <record id="action_update_customer_state" model="ir.actions.server">
+            <field name="name">Set Customer as Service Customer</field>
+            <field name="model_id" ref="vehicle_repair_management.model_vehicle_repair"/>
+            <field name="state">code</field>
+            <field name="code">
+for record in records:
+    if record.partner_id:
+        record.partner_id.write({'repair_state': 'service_customer'})
+    else:
+        record.partner_id.write({'repair_state': 'non_service_customer'})
+
+            </field>
+        </record>
+
+        <record id="automation_repair_created" model="base.automation">
+            <field name="name">Update Customer on Repair Creation</field>
+            <field name="model_id" ref="vehicle_repair_management.model_vehicle_repair"/>
+            <field name="trigger">on_create</field>
+            <field name="action_server_ids" eval="[(4, ref('action_update_customer_state'))]"/>
         </record>
 </data>
 </odoo>

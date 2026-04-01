@@ -16,10 +16,11 @@
                 <field name="mobile_no"/>
                 <field name="salesperson_id"/>
                 <field name="estimated_amount"/>
-                 <field name="total_parts_labor_cost"/>
+                <field name="total_parts_labor_cost"/>
                 <field name="tag_ids" widget="many2many_tags"
                        options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
-                <field name="state" decoration-danger="state in ['cancel']" decoration-success="state in ['done']"/>
+                <field name="state" decoration-danger="duration==0 and state == 'in progress'"
+                       decoration-warning="duration ==1 and state == 'in progress'"/>
             </list>
         </field>
     </record>
@@ -52,21 +53,26 @@
 
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                    <field name="invoice_count" invisible="1"/>
-                    <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
-                            invisible="state in ('cancel','draft','in progress','ready for delivery')">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_value"><field name="invoice_count"/></span>
-                            <span class="o_stat_text">Invoice</span>
-                        </div>
-                    </button>
+                        <field name="invoice_count" invisible="1"/>
+                        <button name="action_view_invoice" type="object" class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="state in ('cancel','draft','in progress','ready for delivery')">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="invoice_count"/>
+                                </span>
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active != False"/>
                     <widget name="web_ribbon" title="Paid" bg_color="text-bg-success"
                             invisible="payment_state not in ('paid', 'in_payment')"/>
 
                     <div class="oe_title">
-                        <h1><field name="reference" readonly="1"/></h1>
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
                     </div>
 
                     <field name="image_1920" class="oe_avatar" widget="image"/>
@@ -89,8 +95,10 @@
                             <field name="vehicle_number" readonly="state == 'in progress'"/>
                             <field name="salesperson_id" readonly="state == 'in progress'"/>
                             <field name="mobile_no"/>
+                            <field name="duration"/>
                             <field name="estimated_date"/>
-                            <field name="deliver_date" invisible="state in ('draft','in progress','ready for delivery','cancel')"/>
+                            <field name="deliver_date"
+                                   invisible="state in ('draft','in progress','ready for delivery','cancel')"/>
 
                         </group>
                     </group>
@@ -105,9 +113,9 @@
                                 <list editable="bottom">
                                     <field name="detail"/>
                                     <field name="employee_id"/>
-                                    <field name="hours_spent" />
+                                    <field name="hours_spent"/>
                                     <field name="hourly_cost" widget="monetary"/>
-                                    <field name="subtotal" widget="monetary" />
+                                    <field name="subtotal" widget="monetary"/>
                                 </list>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
@@ -115,23 +123,23 @@
                             </group>
                         </page>
                         <page string="Consumed Parts">
-                                  <field name="consumed_part_ids">
-                                      <list editable="bottom">
-                                          <field name="product_id"/>
-                                          <field name="qty"/>
-                                          <field name="unit_price" widget="monetary"/>
-                                          <field name="subtotal" widget="monetary"/>
-                                      </list>
-                                  </field>
+                            <field name="consumed_part_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="unit_price" widget="monetary"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="total_parts_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
                             </group>
                         </page>
                     </notebook>
-                     <group class="oe_subtotal_footer oe_right">
-                                <field name="total_parts_labor_cost" class="oe_subtotal_footer_separator"
-                                       widget="monetary"/>
-                     </group>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_parts_labor_cost" class="oe_subtotal_footer_separator"
+                               widget="monetary"/>
+                    </group>
 
                 </sheet>
                 <chatter/>

@@ -1,19 +1,26 @@
 <?xml version="1.0" ?>
 <odoo>
-        <record id="view_partner_form" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
-                  <button name="action_service_count" type="object" class="oe_stat_button" icon="fa-wrench">
-                 <field name="service_count" widget="statinfo" string="Service Count"/>
-                  </button>
-                </xpath>
-                <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="action_create_service"
-                            type="object" class="oe_stat_button" widget="satinfo" string="New Service Request"/>
-                </xpath>
-            </field>
-        </record>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="repair_state" widget="statusbar"
+                       statusbar_visible="non_service_customer,service_customer"/>
+                    </header>
+
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_service_count" type="object" class="oe_stat_button" icon="fa-wrench">
+                    <field name="service_count" widget="statinfo" string="Service Count"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_create_service"
+                        type="object" class="oe_stat_button" widget="satinfo" string="New Service Request"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

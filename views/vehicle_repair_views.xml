@@ -12,15 +12,24 @@
         <field name="model">vehicle.repair</field>
         <field name="arch" type="xml">
             <list string="vehicle_repair_management">
-                <field name="partner_id"/>
-                <field name="mobile_no"/>
-                <field name="salesperson_id"/>
-                <field name="estimated_amount"/>
-                <field name="total_parts_labor_cost"/>
+                <field name="partner_id" decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+                <field name="mobile_no" decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+                <field name="salesperson_id" decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+                <field name="estimated_amount" decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+                <field name="total_parts_labor_cost"
+                       decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
                 <field name="tag_ids" widget="many2many_tags"
-                       options="{'color_field': 'color'}" readonly="state == 'in progress'"/>
-                <field name="state" decoration-danger="duration==0 and state == 'in progress'"
-                       decoration-warning="duration ==1 and state == 'in progress'"/>
+                       options="{'color_field': 'color'}" readonly="state == 'in progress'"
+                       decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+                <field name="state" decoration-danger="estimated_date == today and state == 'in progress'"
+                       decoration-warning="estimated_date > start_date and state == 'in progress'"/>
+
             </list>
         </field>
     </record>
@@ -119,7 +128,8 @@
                                 </list>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="total_labor_cost" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                <field name="total_labor_cost" class="oe_subtotal_footer_separator"
+                                       widget="monetary"/>
                             </group>
                         </page>
                         <page string="Consumed Parts">

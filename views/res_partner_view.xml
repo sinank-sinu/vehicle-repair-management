@@ -21,6 +21,7 @@
                 <button name="action_create_service"
                         type="object" class="oe_stat_button" widget="satinfo" string="New Service Request"/>
             </xpath>
+
         </field>
     </record>
 </odoo>

@@ -18,4 +18,15 @@
               parent="vehicle_repair_configurations_menu"
               action="vehicle_repair_tag_action"/>
 
+    <menuitem id="menu_vehicle_repair_reporting"
+          name="Reporting"
+          parent="vehicle_repair_menu_root"/>
+
+    <menuitem id="menu_repair_report_wizard"
+          name="Repair Analysis"
+          parent="menu_vehicle_repair_reporting"
+          action="action_repair_report_wizard"/>
+
+
+
 </odoo>

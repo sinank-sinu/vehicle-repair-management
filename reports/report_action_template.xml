@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+       <record id="action_report_repair_wizard" model="ir.actions.report">
+    <field name="name">Repair Analysis Report</field>
+    <field name="model">repair.report.wizard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">vehicle_repair_management.report_repair_details_template</field>
+    <field name="report_file">vehicle_repair_management.report_repair_details_template</field>
+    <field name="binding_model_id" eval="False"/>
+</record>
+
+   <template id="report_repair_details_template">
+    <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <center><h2>Repair Report</h2></center>
+
+                <div class="row mt32 mb32">
+                    <div class="col-6" t-if="not multi_customer and docs.partner_ids">
+                        <strong>Customer: </strong> <span t-esc="docs.partner_ids[0].name"/>
+                    </div>
+                    <div class="col-6" t-if="not multi_advisor and docs.salesperson_id">
+                        <strong>Advisor: </strong> <span t-esc="docs.salesperson_id[0].name"/>
+                    </div>
+                </div>
+
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Vehicle No.</th>
+                            <th t-if="multi_advisor">Advisor</th>
+                            <th t-if="multi_customer">Customer</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Vehicle Type</th>
+                            <th>Service Type</th>
+                            <th>Estimated Amount</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="env['vehicle.repair'].browse(repairs)" t-as="line">
+                            <tr>
+                                <td><span t-field="line.vehicle_model_id"/></td>
+                                <td><span t-field="line.vehicle_number"/></td>
+                                <td t-if="multi_advisor"><span t-field="line.salesperson_id"/></td>
+                                <td t-if="multi_customer"><span t-field="line.partner_id"/></td>
+                                <td><span t-field="line.start_date"/></td>
+                                <td><span t-field="line.deliver_date"/></td>
+                                <td><span t-field="line.vehicle_type_id"/></td>
+                                <td><span t-field="line.service_type"/></td>
+                                <td><span t-field="line.estimated_amount"/></td>
+                                <td><span t-field="line.total_parts_labor_cost"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+
+</odoo>
+
+

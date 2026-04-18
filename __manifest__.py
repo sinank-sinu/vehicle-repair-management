@@ -17,6 +17,8 @@
         'data/product_demo.xml',
         'security/security_group.xml',
         'security/ir.model.access.csv',
+        'wizard/repair_report.xml',
+        'reports/report_action_template.xml',
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',
         'views/res_partner_view.xml',

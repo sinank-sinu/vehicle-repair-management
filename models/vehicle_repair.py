@@ -225,4 +225,3 @@ class VehicleRepair(models.Model):
         for record in self:
             record.estimated_date = record.start_date + relativedelta(days=record.duration)
 
-

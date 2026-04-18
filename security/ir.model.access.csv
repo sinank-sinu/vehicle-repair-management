@@ -3,3 +3,4 @@ access_vehicle_repair,vehicle.repair,model_vehicle_repair,base.group_user,1,1,1,
 access_vehicle_repair_tag,vehicle.repair.tag,model_vehicle_repair_tag,base.group_user,1,1,1,1
 access_service_labor_line,service.labor.line,model_service_labor_line,base.group_user,1,1,1,1
 access_consumed_part,consumed.part,model_consumed_part,base.group_user,1,1,1,1
+access_repair_report_wizard,repair.report.wizard,model_repair_report_wizard,base.group_user,1,1,1,1

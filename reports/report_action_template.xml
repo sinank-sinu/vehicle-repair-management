@@ -1,57 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-       <record id="action_report_repair_wizard" model="ir.actions.report">
+<record id="action_report_repair_wizard" model="ir.actions.report">
     <field name="name">Repair Analysis Report</field>
     <field name="model">repair.report.wizard</field>
     <field name="report_type">qweb-pdf</field>
     <field name="report_name">vehicle_repair_management.report_repair_details_template</field>
     <field name="report_file">vehicle_repair_management.report_repair_details_template</field>
-    <field name="binding_model_id" eval="False"/>
+    <field name="binding_model_id" ref="model_repair_report_wizard"/>
 </record>
-
-   <template id="report_repair_details_template">
+<template id="report_repair_details_template">
     <t t-call="web.html_container">
         <t t-call="web.external_layout">
             <div class="page">
-                <center><h2>Repair Report</h2></center>
+                <div class="oe_structure"/>
+
+                <center><h2>Repair Analysis Report</h2></center>
 
                 <div class="row mt32 mb32">
-                    <div class="col-6" t-if="not multi_customer and docs.partner_ids">
-                        <strong>Customer: </strong> <span t-esc="docs.partner_ids[0].name"/>
+                    <div class="col-6" t-if="single_customer">
+                        <strong>Customer: </strong><span t-esc="single_customer"/>
                     </div>
-                    <div class="col-6" t-if="not multi_advisor and docs.salesperson_id">
-                        <strong>Advisor: </strong> <span t-esc="docs.salesperson_id[0].name"/>
+                    <div class="col-6" t-if="single_advisor">
+                        <strong>Service Advisor: </strong><span t-esc="single_advisor"/>
                     </div>
                 </div>
 
-                <table class="table table-sm">
+                <table class="table table-sm o_main_table">
                     <thead>
                         <tr>
-                            <th>Model</th>
-                            <th>Vehicle No.</th>
-                            <th t-if="multi_advisor">Advisor</th>
-                            <th t-if="multi_customer">Customer</th>
-                            <th>Start</th>
-                            <th>End</th>
+                            <th>Vehicle Model</th>
+                            <th>Vehicle Number</th>
+                            <th t-if="customer_count > 1">Customer</th>
+                            <th t-if="advisor_count > 1">Advisor</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>State</th>
                             <th>Vehicle Type</th>
                             <th>Service Type</th>
-                            <th>Estimated Amount</th>
-                            <th>Total Amount</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="env['vehicle.repair'].browse(repairs)" t-as="line">
+                        <t t-foreach="docs" t-as="o">
                             <tr>
-                                <td><span t-field="line.vehicle_model_id"/></td>
-                                <td><span t-field="line.vehicle_number"/></td>
-                                <td t-if="multi_advisor"><span t-field="line.salesperson_id"/></td>
-                                <td t-if="multi_customer"><span t-field="line.partner_id"/></td>
-                                <td><span t-field="line.start_date"/></td>
-                                <td><span t-field="line.deliver_date"/></td>
-                                <td><span t-field="line.vehicle_type_id"/></td>
-                                <td><span t-field="line.service_type"/></td>
-                                <td><span t-field="line.estimated_amount"/></td>
-                                <td><span t-field="line.total_parts_labor_cost"/></td>
+                                <td><span t-esc="o['model']"/></td>
+                                <td><span t-esc="o['vehicle_number']"/></td>
+                                <td t-if="customer_count > 1"><span t-esc="o['customer']"/></td>
+                                <td t-if="advisor_count > 1"><span t-esc="o['advisor']"/></td>
+                                <td><span t-esc="o['start_date']"/></td>
+                                <td><span t-esc="o['end_date']"/></td>
+                                <td><span t-esc="o['state']"/></td>
+                                <td><span t-esc="o['vehicle_type']"/> </td>
+                                <td><span t-esc="o['service_type']"/> </td>
+                                <td><span t-esc="o['total_amount']"/></td>
+
                             </tr>
                         </t>
                     </tbody>
@@ -60,6 +62,8 @@
         </t>
     </t>
 </template>
+
+
 
 </odoo>
 

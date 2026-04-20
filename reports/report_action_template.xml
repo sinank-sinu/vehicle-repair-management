@@ -3,7 +3,7 @@
 <record id="action_report_repair_wizard" model="ir.actions.report">
     <field name="name">Repair Analysis Report</field>
     <field name="model">repair.report.wizard</field>
-    <field name="report_type">qweb-pdf</field>
+    <field name="report_type">qweb-html</field>
     <field name="report_name">vehicle_repair_management.report_repair_details_template</field>
     <field name="report_file">vehicle_repair_management.report_repair_details_template</field>
     <field name="binding_model_id" ref="model_repair_report_wizard"/>

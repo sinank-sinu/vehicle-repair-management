@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from odoo import models, fields
 
 class RepairReportWizard(models.TransientModel):
@@ -12,3 +14,5 @@ class RepairReportWizard(models.TransientModel):
     def action_print_report(self):
        data = {'form': self.read()[0]}
        return self.env.ref('vehicle_repair_management.action_report_repair_wizard' ).report_action(self, data=data)
+    def action_print_xlsx(self):
+        print("hii")

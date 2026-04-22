@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
 {
     'name': 'vehicle_repair_management',
     'version': '1.0',
     'category': 'Vehicle Repair Management',
     'summary': 'Vehicle Repair Management Module',
-    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom','contacts','base_automation'],
+    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom','contacts','base_automation', 'web'],
     'application': True,
     'installable': True,
     'sequence': -3,
@@ -26,5 +25,9 @@
         'views/vehicle_repair_menu.xml',
     ],
     'demo': ['data/fleet_demo.xml'],
-
+    'assets': {
+        'web.assets_backend': [
+            'vehicle_repair_management/static/src/js/action_manager.js',
+        ],
+    },
 }

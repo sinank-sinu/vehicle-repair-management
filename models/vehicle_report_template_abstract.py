@@ -29,10 +29,16 @@ class VehicleReportTemplateAbstract(models.AbstractModel):
         JOIN res_partner rp ON vr.partner_id = rp.id
         JOIN res_users ru ON vr.salesperson_id = ru.id
         JOIN res_partner advisor_partner ON ru.partner_id = advisor_partner.id
-        WHERE vr.start_date >= %s
-        AND vr.start_date <= %s
+        WHERE 1=1
         """
-        params = [form['start_date'], form['end_date']]
+        params = []
+        if form.get('start_date'):
+            query += " AND vr.start_date >= %s"
+            params.append(form['start_date'])
+
+        if form.get('end_date'):
+            query += " AND vr.start_date <= %s"
+            params.append(form['end_date'])
 
         if form.get('partner_ids'):
             query += " AND vr.partner_id IN %s"

@@ -10,8 +10,8 @@ class RepairReportWizard(models.TransientModel):
     _name = 'repair.report.wizard'
     _description = 'Vehicle Repair Report Wizard'
 
-    start_date = fields.Date(string='Start Date', required=True)
-    end_date = fields.Date(string='End Date', required=True)
+    start_date = fields.Date(string='Start Date')
+    end_date = fields.Date(string='End Date')
     partner_ids = fields.Many2many('res.partner', string='Customers')
     salesperson_ids = fields.Many2many('res.users', string='Service Advisors')
 
@@ -20,6 +20,7 @@ class RepairReportWizard(models.TransientModel):
        return self.env.ref('vehicle_repair_management.action_report_repair_wizard' ).report_action(self, data=data)
 
     def action_print_xlsx(self):
+        """This function is to fetch data and return"""
         report_model = self.env['report.vehicle_repair_management.report_repair_details_template']
         data = {'form': self.read()[0]}
 
@@ -46,43 +47,48 @@ class RepairReportWizard(models.TransientModel):
         }
 
     def get_xlsx_report(self, data, response):
+        """This function is used to customize the xlsx report"""
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet('Repairs')
 
-        head = workbook.add_format({'align': 'center', 'bold': True, 'font_size': '18px'})
-        table_head = workbook.add_format({'bold': True, 'border': 1, 'bg_color': '#EEEEEE'})
-        txt = workbook.add_format({'font_size': '10px', 'border': 1})
-        date_txt = workbook.add_format({'font_size': '10px', 'border': 1, 'num_format': 'yyyy-mm-dd'})
-
-        sheet.merge_range('A3:G3', 'VEHICLE REPAIR REPORT', head)
+        head = workbook.add_format({'align': 'center', 'bold': True, 'font_size': '18px','bg_color': 'EEEEEE'})
+        table_head = workbook.add_format({'bold': True, 'border': 1, 'bg_color': '#EEEEEE','align': 'center'})
+        txt = workbook.add_format({'font_size': '10px', 'border': 1,'align': 'center'})
+        sheet.merge_range('B2:K3', 'VEHICLE REPAIR REPORT', head)
 
         if data.get('single_customer'):
-            sheet.write('A4', 'CUSTOMER:', table_head)
+            sheet.write('A4', 'CUSTOMER:', txt)
             sheet.write('B4', data['single_customer'], txt)
 
         if data.get('single_advisor'):
-            sheet.write('C4', 'ADVISOR:', table_head)
-            sheet.write('D4', data['single_advisor'], txt)
+            sheet.write('A5', 'ADVISOR:', txt)
+            sheet.write('B5', data['single_advisor'], txt)
 
-        columns = ['Model', 'Vehicle No', 'Customer', 'Advisor', ' Start Date','End date', 'State',
-                   'Vehicle Type','Service Type','Amount']
-        for col, title in enumerate(columns):
-            sheet.write(6, col, title, table_head)
+        headers = [('Model:', 'model'), ('Vehicle No:', 'vehicle_number')]
+
+        if not data.get('single_customer'):
+            headers.append(('Customer:', 'customer'))
+
+        if not data.get('single_advisor'):
+            headers.append(('Advisor:', 'advisor'))
+
+        headers.extend([('Start Date:', 'start_date'),('End Date:', 'end_date'),('State:', 'state'),('Vehicle Type:', 'vehicle_type'),
+                        ('Service Type:', 'service_type'),('Total:', 'total_amount')
+        ])
+
+        for col, (header_label, field_name) in enumerate(headers):
+            sheet.write(6, col, header_label, table_head)
+            sheet.set_column(col, col, 15)
 
         row = 7
         for line in data.get('docs', []):
-            sheet.write(row, 0, line.get('model'), txt)
-            sheet.write(row, 1, line.get('vehicle_number'), txt)
-            sheet.write(row, 2, line.get('customer'), txt)
-            sheet.write(row, 3, line.get('advisor'), txt)
-            sheet.write(row, 4, str(line.get('start_date')), date_txt)
-            sheet.write(row, 5, str(line.get('end_date')), date_txt)
-            sheet.write(row, 6, line.get('state'), txt)
-            sheet.write(row, 7, line.get('vehicle_type'), txt)
-            sheet.write(row, 8, line.get('service_type'), txt)
-            sheet.write(row, 9, line.get('total_amount'), txt)
+            for col, (header_label, field_name) in enumerate(headers):
+                val = line.get(field_name)
+                sheet.write(row, col, val if val else '0')
             row += 1
+
+        workbook.close()
 
         workbook.close()
         output.seek(0)

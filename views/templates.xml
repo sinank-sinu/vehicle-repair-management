@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <template id="repair_page_template" name="Customer Form">
+            <t t-call="website.layout">
+                <section class="d-flex align-items-center justify-content-center vh-100"
+                         style="background-color: #f8f9fb;">
+                    <div class="card shadow-lg rounded-4" style="width: 700px;">
+                        <div class="card-body p-9">
+                            <h3 class="text-center mb-4">VEHICLE REPAIR FORM</h3>
+                            <form action="/website/customer/create" method="post" enctype="multipart/form-data">
+                                <div class="row ">
+
+                                    <label class="form-label fw-semibold">Customer name</label>
+                                    <select name="name" class="form-control rounded-2">
+                                        <t t-foreach="request.env['res.partner'].search([])" t-as="na">
+                                            <option t-att-value="na.id">
+                                                <t t-esc="na.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+
+
+                                    <label class="form-label fw-semibold">Vehicle type</label>
+                                    <select name="vehicle_type" class="form-control rounded-2">
+                                        <t t-foreach="request.env['fleet.vehicle.model.category'].search([])"
+                                           t-as="na">
+                                            <option t-att-value="na.id">
+                                                <t t-esc="na.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+
+                                    <label class="form-label fw-semibold">Vehicle model</label>
+                                    <select name="vehicle_model" class="form-control rounded-2">
+                                        <t t-foreach="request.env['fleet.vehicle.model'].search([])" t-as="na">
+                                            <option t-att-value="na.id">
+                                                <t t-esc="na.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+
+                                    <label class="form-label fw-semibold">Vehicle Number</label>
+                                    <input type="text" name="vehicle_no" placeholder="kl 11"
+                                           class="form-control rounded-2"
+                                           required="1"/>
+
+                                    <label class="form-label fw-semibold">Vehicle Image</label>
+                                    <input type="file" name="file1" class="form-control" accept="image/*"/>
+                                </div>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-block rounded-3 py-2"
+                                            style="width: 200px;">
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
+
+        <template id="customer_success_template" name="Customer Created">
+            <t t-call="website.layout">
+                <section class="d-flex align-items-center justify-content-center vh-100"
+                         style="background-color: #f8f9fb;">
+                    <div class="card shadow-lg rounded-4" style="max-width: 500px; width: 100%; border-radius: 20px;">
+                        <div class="card-body p-9">
+                            <h2 class="fw-bold mb-2" style="color: #2c3e50;">Registration Successful!</h2>
+                            <form action="/website/customer/create" method="post" enctype="multipart/form-data">
+                                <div class="text-center">
+                                    <h4 class="text-success mb-3">Thank you!</h4>
+                                    <a href="/hello-odoo" class="btn btn-primary rounded-3">Add Another</a>
+                                    <a href="http://localhost:8019/" class="btn btn-primary rounded-3">Back to home</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+        <template id="customer_error" name="Customer Error">
+            <t t-call="website.layout">
+                <section class="d-flex align-items-center justify-content-center vh-100"
+                         style="background-color: #f8f9fb;">
+                    <div class="card shadow-lg rounded-4" style="width: 700px;">
+                        <div class="card-body p-5">
+                            <h4 class="text-center mb-4 fw-bold mb-2 text-danger">REGISTRATION FAILED</h4>
+                            <div class="text-center">
+                                <t t-if="error_msg">
+                                    <div class="fw-bold mb-2" role="alert">
+                                        <t t-esc="error_msg"/>
+                                    </div>
+                                </t>
+                                <div class="d-flex justify-content-center gap-4">
+                                    <a href="/hello-odoo" class="btn btn-secondary rounded-4">TRY AGAIN</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
+
+        <record id="hello_page_menu" model="website.menu">
+            <field name="name">Vehicle Repair</field>
+            <field name="url">/hello-odoo</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">99</field>
+        </record>
+    </data>
+</odoo>

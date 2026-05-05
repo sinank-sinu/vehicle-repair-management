@@ -12,7 +12,7 @@ class VehicleRepair(models.Model):
     _rec_name = 'vehicle_type_id'
     _inherit = ['mail.thread']
 
-    image_1920 = fields.Image(string="vehicle image")
+    image_1920 = fields.Binary(string="vehicle image")
     mobile_no = fields.Char(related='partner_id.phone', readonly=True)
     active = fields.Boolean(default=True)
     start_date = fields.Date( string="Start date",required=True,default=lambda self: date.today() , copy=False )
@@ -54,7 +54,7 @@ class VehicleRepair(models.Model):
     ],default='draft', required=True, copy=False, tracking=True)
     tag_ids = fields.Many2many(
         'vehicle.repair.tag',
-        string='Tags',required=True)
+        string='Tags'   )
     reference = fields.Char(string='Reference', default='New', readonly=True)
     service_type = fields.Selection([
         ('un paid', 'Un Paid'),

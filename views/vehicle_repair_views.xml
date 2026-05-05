@@ -94,7 +94,7 @@
                                    readonly="state == 'in progress'"/>
                             <field name="company_id"/>
                             <field name="estimated_amount" widget="monetary" readonly="state == 'in progress'"/>
-                            <field name="service_type" required="1" readonly="state == 'in progress'"/>
+                            <field name="service_type"  readonly="state == 'in progress'"/>
                             <field name="currency_id"/>
                         </group>
                         <group>

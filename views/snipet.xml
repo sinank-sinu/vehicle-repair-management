@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="top_repair_snippet_template" name="Top Repairs Content">
+        <section class="container mt-4">
+            <div class="row">
+                <t t-foreach="repairs" t-as="repair">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <a t-attf-href="/repair/details/#{repair.id}" class="text-decoration-none text-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><t t-esc="repair.name"/></h5>
+                                    <p class="card-text">
+                                        <strong>Vehicle:</strong> <t t-esc="repair.vehicle_id.name"/><br/>
+                                        <strong>Cost:</strong>
+                                        <t t-esc="repair.total_parts_labor_cost"
+                                           t-options='{"widget": "monetary", "display_currency": repair.currency_id}'/>
+                                    </p>
+                                    <span class="btn btn-sm btn-outline-primary">View Details</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </section>
+    </template>
+
+<template id="top_repair_snippet" name="Top 4 Repairs">
+    <section class="s_top_repairs_dynamic pb32 pt32" data-snippet="s_top_repairs_dynamic">
+        <div class="container">
+            <div class="alert alert-info text-center">
+                <h4>Top 4 Vehicle Repairs</h4>
+                <p>This content will load dynamically from the database.</p>
+            </div>
+        </div>
+    </section>
+</template>
+
+
+    <template id="register_repair_snippet" inherit_id="website.snippets">
+        <xpath expr="//snippets[@id='snippet_groups']" position="inside">
+            <t t-snippet="vehicle_repair_management.top_repair_snippet"
+               t-thumbnail="/vehicle_repair_management/static/description/icon.png"
+               snippet-group="dynamic_content"/>
+        </xpath>
+    </template>
+        <template id="register_repair_snippet" inherit_id="website.snippets">
+        <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+            <t t-snippet="vehicle_repair_management.top_repair_snippet"
+               t-thumbnail="/vehicle_repair_management/static/description/icon.png"
+               group="dynamic_content"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+   <t t-name="vehicle_repair_management.category_data">
+       <div class="container my-4">
+           <div class="categories_wrapper">
+               <div class="row g-4">
+                   <t t-foreach="result" t-as="repair" t-key="repair.id">
+                       <div class="col-12 col-md-6 col-lg-4">
+                           <div class="card shadow-lg h-100" style="border-radius: 20px; background-color: #f8f9fb;">
+                               <div class="card-body p-4">
+                                   <div class="text-center">
+                                       <div class="type" style="font-weight: 700; font-size: 20px;">
+                                           <div class="position-relative" style="height: 180px; background-color: #e9ecef;">
+                                            <t t-if="repair.image_1920">
+                                                <img t-attf-src="data:image/png;base64,{{repair.image_1920}}"
+                                                     class="w-100 h-100" style="object-fit: cover;"/>
+                                            </t>
+                                           <t t-else="">
+                                               <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                                   <i class="fa fa-car fa-3x"></i>
+                                               </div>
+                                           </t>
+                                           <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-primary px-3 py-2 shadow-sm">
+                                               <t t-esc="repair.vehicle_type_id"/>
+                                           </span>
+                                           </div>
+                                           <div class="card-body p-4">
+                                               <h5 class="card-title mb-1 text-dark" style="font-weight: 700;">
+                                                   <t t-esc="repair.partner_id"/>
+                                               </h5>
+                                               <p class="text-muted small mb-3">Vehicle Repair Details</p>
+                                           </div>
+                                           <div class="row g-2">
+                                               <div class="col-6">
+                                                   <small class="text-muted fw-bold" >Model</small>
+                                                   <div class="text-dark fw-semibold" ><t t-esc="repair.vehicle_model_id"/></div>
+                                               </div>
+                                               <div class="col-6">
+                                                   <small class="text-muted fw-bold">Plate No.</small>
+                                                   <div class="text-primary fw-bold"><t t-esc="repair.vehicle_number"/></div>
+                                               </div>
+                                           </div>
+                                       </div>
+
+                                       <div class="card-footer bg-white border-0 p-4 pt-0">
+                                           <button class="btn-primary  w-100 ">View Details</button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </t>
+               </div>
+           </div>
+       </div>
+   </t>
+</templates>
+

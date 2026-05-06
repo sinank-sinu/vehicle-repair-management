@@ -23,7 +23,7 @@
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',
         'views/res_partner_view.xml',
-        'views/vehicle_search_view.xml',    
+        'views/vehicle_search_view.xml',
         'views/vehicle_repair_menu.xml',
     ],
     'demo': ['data/fleet_demo.xml'],
@@ -31,8 +31,10 @@
         'web.assets_backend': [
             'vehicle_repair_management/static/src/js/action_manager.js',
         ],
-        'web.assets_frontend': [
-            'vehicle_repair_management/static/src/js/repair_snippet.js',
+         'web.assets_frontend': [
+             'vehicle_repair_management/static/src/xml/repair_snippet_template.xml',
+             'vehicle_repair_management/static/src/js/snippet.js',
+
         ],
     },
 }

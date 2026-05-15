@@ -7,7 +7,7 @@ publicWidget.registry.get_top_repairs = publicWidget.Widget.extend({
     selector: '.top_repairs',
     async willStart()
     {
-        const result = await rpc('/repairs', {});
+        const result = await rpc('/repairs', {});''
 
         if (result && result.repairs)
         {

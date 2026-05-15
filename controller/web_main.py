@@ -45,3 +45,8 @@ class HelloWorld(http.Controller):
             'image_1920': image_base64,
         })
         return request.render('vehicle_repair_management.customer_success_template')
+
+
+
+
+

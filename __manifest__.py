@@ -4,7 +4,7 @@
     'version': '1.0',
     'category': 'Vehicle Repair Management',
     'summary': 'Vehicle Repair Management Module',
-    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom','contacts','base_automation', 'web','website'],
+    'depends': ['base','fleet','mail','hr','hr_timesheet','stock','product','uom','contacts','base_automation', 'web','website','website_sale'],
     'application': True,
     'installable': True,
     'sequence': -3,
@@ -20,6 +20,7 @@
         'reports/report_action_template.xml',
         'views/templates.xml',
         'views/snipet.xml',
+        'views/clear_cart.xml',
         'views/vehicle_repair_views.xml',
         'views/vehicle_repair_tag_view.xml',
         'views/res_partner_view.xml',
@@ -34,7 +35,8 @@
          'web.assets_frontend': [
              'vehicle_repair_management/static/src/xml/repair_snippet_template.xml',
              'vehicle_repair_management/static/src/js/snippet.js',
+             'vehicle_repair_management/static/src/js/clear_cart.js',
 
-        ],
+         ],
     },
 }
